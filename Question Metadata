@@ -1,0 +1,47 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package pp_er.Questoes;
+
+import interfaces.models.IQuestionMetadata;
+
+/**
+ *
+ * @author Asus
+ */
+public class QuestionMetadata implements IQuestionMetadata{
+    
+    private long timestamp_start;
+    private long timestamp_finish;
+
+    public QuestionMetadata() {
+    }
+
+    public QuestionMetadata(long timestamp_start) {
+        this.timestamp_start = timestamp_start;
+    }
+    
+    public long getTimestamp_start(){
+        return this.timestamp_start;    
+    }
+    
+    public void setTimestamp_start(long l){
+        this.timestamp_start=1;    
+    }
+   
+    public long getTimestamp_finish(){
+        return this.timestamp_finish;   
+    }
+    
+    public void setTimestamp_finish(long l){
+        this.timestamp_finish=1; 
+    }
+    
+    
+    
+    
+    
+    
+}
