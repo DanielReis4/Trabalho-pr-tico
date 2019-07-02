@@ -1,0 +1,146 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package pp_er.Questoes;
+
+import interfaces.exceptions.QuestionException;
+import interfaces.models.IQuestion;
+import interfaces.models.IQuestionMetadata;
+
+
+
+/**
+ *
+ * @author Asus
+ */
+public abstract class Question implements IQuestion{
+    
+    protected IQuestionMetadata question_Metadata;
+    protected String title;
+    protected String question_description;
+    protected double correct_anwser;
+    protected String correct_answer;
+    protected String user_answer,score;
+    protected float mark;
+    protected boolean done;
+    protected double user_Answer;
+
+    public Question(String title, String question_description, String correct_answer, float mark) {
+        this.title = title;
+        this.question_description = question_description;
+        this.correct_answer = correct_answer;
+        this.mark = mark;
+        this.question_Metadata = new QuestionMetadata();
+    }
+
+    public Question(String title, String question_description, double correct_anwser, float mark) {
+        this.title = title;
+        this.question_description = question_description;
+        this.correct_anwser = correct_anwser;
+        this.mark = mark;
+        this.question_Metadata = new QuestionMetadata();
+        
+    }
+    
+    
+    
+    
+    
+    @Override
+    public String getTitle(){
+        return title;
+    }
+
+    @Override
+    public void setTitle(String string) throws QuestionException{
+        if (string == null) throw new QuestionException ("Title cant be null");
+        this.title = string;
+    }
+
+    @Override
+    public float getMark(){
+        return mark;
+    }
+
+    @Override
+    public void setMark(float f){
+        this.mark = f;
+    }
+    
+    @Override
+    public boolean isDone(){
+        return this.done;
+    }
+
+    @Override
+    public void setDone(boolean bln){
+        this.done = bln;
+    }
+    
+    @Override
+    public void answer(String string){
+        this.user_answer= string;
+    }
+    
+    @Override
+    public boolean evaluateAnswer(){
+        return this.user_answer.equals(this.correct_answer);
+    }
+
+    public String getCorrect_answer() {
+        return correct_answer;
+    }
+
+    public void setCorrect_answer(String correct_answer) {
+        this.correct_answer = correct_answer;
+    }
+
+    public String getUseranswer() {
+        return user_answer;
+    }
+
+    public void setUser_answer(String user_answer) {
+        this.user_answer = user_answer;
+    }
+
+    @Override
+    public String getQuestion_description(){
+        return question_description;  
+    }
+
+    @Override
+    public void setQuestion_description(String string) throws QuestionException{
+       if (string == null) throw new QuestionException ("Description cant be null");
+        this.question_description = string;
+    }
+
+    @Override
+    public IQuestionMetadata getQuestion_metadata(){
+        return question_Metadata;
+    }
+
+    @Override
+    public void setQuestion_metadata(IQuestionMetadata iqm){
+        this.question_Metadata = iqm;
+    }
+
+    public String getScore() {
+        return score;
+    }
+
+    public void setScore(String score) {
+        this.score = score;
+    }
+    
+    public double getUserAnwser(){
+        return user_Answer;    
+    }
+    
+    public void setUserAnwser(){
+       this.user_Answer = user_Answer;
+    }
+    
+
+    
