@@ -1,0 +1,56 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package pp_er.Questoes;
+
+
+
+import interfaces.models.IQuestionMultipleChoice;
+
+/**
+ *
+ * @author Asus
+ */
+public class QuestionMultipleChoice extends Question implements IQuestionMultipleChoice{
+    private String [] options;
+
+    public QuestionMultipleChoice(String[] options, String title, String question_description, String correct_answer, float mark) {
+        super(title, question_description, correct_answer, mark);
+        this.options = options;
+    }
+    
+    
+
+    @Override
+    public String[] getOptions(){
+        return options;
+    }
+
+    @Override
+    public void setOptions(String[] strings){
+        this.options = strings;
+    }
+    
+    @Override
+    public String getCorrect_answer(){
+       return super.getCorrect_answer();
+    }
+    
+    @Override
+    public void setCorrect_answer(String string){
+        super.setCorrect_answer(string);
+    }
+    
+    @Override
+    public String getUser_answer(){
+        return super.getUseranswer();
+    }
+    
+    @Override
+    public void setUser_answer(String string){
+        super.setUser_answer(string);
+    }
+     
+}
