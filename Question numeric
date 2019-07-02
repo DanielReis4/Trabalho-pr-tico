@@ -1,0 +1,36 @@
+package pp_er.Questoes;
+
+import interfaces.models.IQuestionNumeric;
+
+/**
+ *
+ * @author Asus
+ */
+public class QuestionNumeric extends Question implements IQuestionNumeric{
+
+    public QuestionNumeric(String title, String question_description, double correct_anwser, float mark) {
+        super(title, question_description, correct_anwser, mark);
+    }
+
+    @Override
+   public double getCorrect_anwser(){
+       return correct_anwser;
+   }
+   
+    @Override
+   public void setCorrect_anwser(double d){
+       this.correct_anwser = d;
+   }
+    
+    @Override
+   public double getUser_answer(){
+       return user_Answer;    
+   } 
+   
+    @Override
+   public void setUser_answer(double d){
+       this.user_Answer = d;
+   }
+    
+    
+}
