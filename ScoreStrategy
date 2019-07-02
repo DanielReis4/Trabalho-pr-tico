@@ -1,0 +1,45 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package pp_er.Teste;
+
+import interfaces.controller.IScoreStrategy;
+import interfaces.models.IQuestion;
+
+/**
+ *
+ * @author Asus
+ */
+public class ScoreStrategy implements IScoreStrategy{
+
+    public ScoreStrategy() {
+    }
+    
+    
+
+    @Override
+    public String CalculateScore(IQuestion[] iqs) {
+        int pontos = 0;
+        String nota;
+        int i = 0;
+        while( i < iqs.length && iqs[i].evaluateAnswer()){
+            pontos += iqs[i].getMark();
+            i++;
+        }
+        if(pontos == 0 && pontos < 5 ){
+            nota = ("Não Satisfaz");  
+        } 
+        else if (pontos >= 5 && pontos < 10){
+            nota = ("Satisfaz");   
+        }
+        else if(pontos >= 10 && pontos < 15){
+            nota = ("Satisfaz Bastante");
+        }
+        else{ nota = ("Excelente");
+        }
+        return nota;
+    }
+}   
+
