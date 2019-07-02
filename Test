@@ -1,0 +1,206 @@
+package pp_er.Teste;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonStreamParser;
+import interfaces.controller.IScoreStrategy;
+import interfaces.controller.ITest;
+import interfaces.controller.ITestStatistics;
+import interfaces.exceptions.TestException;
+import interfaces.models.IQuestion;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+ 
+import java.util.Arrays;
+import pp_er.Questoes.QuestionMultipleChoice;
+import pp_er.Questoes.QuestionNumeric;
+import pp_er.Questoes.QuestionYesNo;
+
+/**
+ *
+ * @author Asus
+ */
+public class Test implements ITest{
+    private IQuestion[] questions;
+    private ITestStatistics statistics;
+    private IScoreStrategy strategy;
+    BufferedReader reader = null;
+
+    public Test() {
+    }
+   
+    
+   
+    @Override
+    public boolean addQuestion(IQuestion iq) throws TestException{
+        if (iq == null) throw new TestException("The question cannot be Null type.");
+        if (this.questions == null){
+            throw new TestException("This test cannot be null");
+            
+        }
+        if (this.numberQuestions() == this.questions.length){
+            IQuestion[] questions = new IQuestion[this.questions.length +1];            
+            
+            for(int i = 0; i < this.questions.length;i++){
+                questions[i] = this.questions[i];   
+            }
+            this.questions = questions;
+            this.questions[this.questions.length - 1] = iq;      
+            return true;
+        }
+        else{
+            int i = 0;
+            while(this.questions[i] != null && i < this.questions.length){
+                i++;
+            }
+            this.questions[i]=iq;
+            
+            return true;
+        } 
+    }
+ 
+    @Override
+    public IQuestion getQuestion(int i) throws TestException{
+        if(this.questions[i] == null) throw new TestException("There is no question at the indicated location(@" + i + ").");
+        return this.questions[i];
+    }
+ 
+    @Override
+    public boolean removeQuestion(int i){
+        if(this.questions[i] == null)
+            return false;
+        if(this.questions.length == 1)
+            this.questions[0] = null;
+       
+        while(i<this.questions.length-1) {
+            this.questions[i] = this.questions[i+1];
+            i++;
+        }
+        this.questions[i] = null;
+        this.questions = Arrays.copyOf(this.questions, this.questions.length - 1);
+        return true;  
+    }
+ 
+    @Override
+    public boolean removeQuestion(IQuestion iq){
+        if (this.questions == null)
+            return false;
+        for(int i = 0;i<this.questions.length; i++) {
+            if (this.questions[i].equals(iq)) {
+                removeQuestion(i);
+                return true;
+            }
+            return false;
+        }
+        return false;  
+    }
+ 
+    @Override
+    public int numberQuestions(){
+        int number = 0;
+        for(int i = 0; i<this.questions.length;i++){
+            if(this.questions[i] != null){
+                number++; 
+            }
+        }
+        return number;
+    }
+ 
+    @Override
+    public boolean isComplete(){
+        int i = 0;
+        while(i<this.questions.length && this.questions[i].isDone()){
+            i++;
+        }
+        return false;
+        
+       
+    }
+ 
+    @Override
+    public ITestStatistics getTestStatistics(){
+        return this.statistics;
+    }
+ 
+    @Override
+    public boolean loadFromJSONFile(String path) throws TestException{
+        boolean loadFile = false;
+
+        try{
+            reader = new BufferedReader (new FileReader(path));
+            JsonStreamParser p = new JsonStreamParser(reader);
+            JsonArray arr = (JsonArray) p.next();
+            int arr_size = arr.size();
+            this.questions = new IQuestion[arr.size()];
+            for (int i = 0; i < arr_size;i++){
+                JsonElement arrayElement = arr.get(i);
+                JsonObject obj = arrayElement.getAsJsonObject();
+                
+                if(obj.has("type")&& obj.has("question")){
+                    String temp_type = obj.get("type").getAsString();
+                    JsonObject temp_Question = obj.get("question").getAsJsonObject();
+                    String temp_title =  temp_Question.get("title").getAsString();
+                    String temp_score =  temp_Question.get("score").getAsString();
+                    float temp_mark = temp_Question.get("mark").getAsFloat();
+                    String temp_description = temp_Question.get("question_description").getAsString();
+                    String temp_correctAnswer = temp_Question.get("correct_answer").getAsString();
+                    
+                    if("MultipleChoice".equals(temp_type)){
+                        JsonArray temp_options = temp_Question.get("options").getAsJsonArray();
+                        String[] listoptions = new String[4];
+                        for(int j = 0; j<4 ;j++){
+                            listoptions[j]= temp_options.get(j).getAsString();
+                        }
+                        IQuestion a = new QuestionMultipleChoice(listoptions, temp_title, temp_description,temp_correctAnswer,temp_mark);
+                        this.addQuestion(a);
+                    } else if (temp_type.equalsIgnoreCase("YesNo")){
+                        this.addQuestion(new QuestionYesNo(temp_title, temp_description,temp_correctAnswer,temp_mark));
+                    }else{
+                        this.addQuestion(new QuestionNumeric(temp_title, temp_description,Double.parseDouble(temp_correctAnswer),temp_mark));
+                        
+                    }   
+                }   
+            }   
+            loadFile = true;
+        }catch (FileNotFoundException ex){
+        }finally{
+            try{
+                reader.close();
+            }catch (IOException ex){
+            }
+        }  
+        return loadFile;
+    }
+   
+    @Override
+    public void setScoreStrategy(IScoreStrategy iss){
+        this.strategy = iss;
+    }
+ 
+    @Override
+    public IScoreStrategy getScoreStrategy(){
+        return this.strategy;
+    }
+ 
+    @Override
+    public String calculateScore(){
+        int i = 0;
+        int sum = 0;
+        while(i<this.questions.length && questions[i].evaluateAnswer()){
+            sum += this.questions[i].getMark();
+        }
+        return String.valueOf(sum);
+    }
+
+    @Override
+    public boolean saveTestResults() throws TestException {
+        if(this.questions == null) throw new TestException ("Test is null");
+        
+ 
+         return true;
+    }  
+}
+    
