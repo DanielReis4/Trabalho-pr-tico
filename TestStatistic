@@ -17,10 +17,12 @@ public class TestStatistics implements ITestStatistics{
     private IQuestion[] questions;
 
     public TestStatistics(IQuestion[] questions) {
+        this.questions = questions;
         this.questions = new Question[0];
     }
 
     public TestStatistics() {
+        this.questions = new Question[0];
     }
 
     public void setQuestions(IQuestion[] questions) {
@@ -101,6 +103,10 @@ public class TestStatistics implements ITestStatistics{
         }
     return Q;
     }
+    
+    
+    
 }
+    
     
    
