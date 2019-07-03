@@ -7,6 +7,7 @@ package pp_er.Teste;
 
 import interfaces.controller.ITestStatistics;
 import interfaces.models.IQuestion;
+import pp_er.Questoes.Question;
 
 /**
  *
@@ -16,13 +17,16 @@ public class TestStatistics implements ITestStatistics{
     private IQuestion[] questions;
 
     public TestStatistics(IQuestion[] questions) {
-        this.questions = questions;
+        this.questions = new Question[0];
     }
 
     public TestStatistics() {
     }
-    
-   
+
+    public void setQuestions(IQuestion[] questions) {
+        this.questions = questions;
+    }
+
     @Override
     public double meanTimePerAnswer(){
         double tempo = 0;
@@ -41,9 +45,10 @@ public class TestStatistics implements ITestStatistics{
         while (i<this.questions.length){
             sum += Math.pow((questions[i].getQuestion_metadata().getTimestamp_finish()-questions[i].getQuestion_metadata().getTimestamp_start())- mediaTempo,2);
         }
-        
-        return Math.sqrt(sum/this.questions.length -1);
-        
+        if(this.questions.length > 1) {
+            return Math.sqrt(sum / this.questions.length - 1);
+        }
+        return -1;
     }
     
     @Override
@@ -57,7 +62,7 @@ public class TestStatistics implements ITestStatistics{
         return (double)incorrectAnswer()/(double)this.questions.length * 100;
        
     }
-   
+
     @Override
     public int correctAnswer(){
         return correctAnswers().length;
@@ -68,8 +73,7 @@ public class TestStatistics implements ITestStatistics{
     public int incorrectAnswer(){
         return incorrectAnswers().length;
        
-   }
-   
+   }  
     @Override
     public IQuestion[] incorrectAnswers(){
         
@@ -81,22 +85,22 @@ public class TestStatistics implements ITestStatistics{
             i++;
         }
     return Q;
-    }
-   
+    } 
+    
     @Override
     public IQuestion[] correctAnswers(){
          
-        IQuestion [] Q = new IQuestion[0];
+        IQuestion [] Q = new Question[0];
         int i =0;
-        while(i< this.questions.length && questions[i]!= null && questions[i].evaluateAnswer()){
-            Q = new IQuestion[ Q.length + 1];
-            Q[ Q.length - 1 ] = this.questions[i]; 
+        while(i< this.questions.length  ){
+            if(questions[i]!= null && questions[i].evaluateAnswer()){
+                Q = new Question[ Q.length + 1];
+                Q[ Q.length - 1 ] = this.questions[i];
+            } 
             i++;
         }
     return Q;
     }
-          
 }
     
    
-
