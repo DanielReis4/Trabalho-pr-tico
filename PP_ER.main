@@ -1,0 +1,45 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package pp_er;
+
+import interfaces.controller.ITest;
+import interfaces.exceptions.TestException;
+import interfaces.models.IQuestion;
+import java.util.Scanner;
+import pp_er.Teste.Test;
+import views.TestWindow;
+
+/**
+ *
+ * @author Asus
+ */
+public class PP_ER {
+
+    /**
+     * @param args the command line arguments
+     * @throws interfaces.exceptions.TestException
+     */
+    public static void main(String[] args) throws TestException{
+        
+        
+        //Carregar o test
+        ITest demoTest = new Test();
+        demoTest.loadFromJSONFile("C:\\Users\\Asus\\Desktop\\Material para os alunos\\data\\teste_A.json");
+        
+        
+        //Executar o teste na camada gráfica
+        TestWindow t = new TestWindow ();
+        t.startTest(demoTest);
+        
+        //Obter os resultados do teste
+        System.out.println("Teste Efectuado!");
+        System.out.println(demoTest.toString());
+    }
+        
+
+}    
+    
+
