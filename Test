@@ -1,5 +1,11 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package pp_er.Teste;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -10,11 +16,18 @@ import interfaces.controller.ITestStatistics;
 import interfaces.exceptions.TestException;
 import interfaces.models.IQuestion;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
  
 import java.util.Arrays;
+
+import pp_er.Teste.ScoreStrategy;
+import pp_er.Teste.TestStatistics;
+import pp_er.Questoes.Question;
 import pp_er.Questoes.QuestionMultipleChoice;
 import pp_er.Questoes.QuestionNumeric;
 import pp_er.Questoes.QuestionYesNo;
@@ -28,12 +41,24 @@ public class Test implements ITest{
     private ITestStatistics statistics;
     private IScoreStrategy strategy;
     BufferedReader reader = null;
-
-    public Test() {
-    }
-   
     
-   
+    
+    
+    public Test() {
+        this.questions = new Question[0];
+        this.statistics = new TestStatistics();
+        this.strategy = new ScoreStrategy();
+    }
+
+    public Test(IQuestion[] questions, ITestStatistics statistics, IScoreStrategy strategy) {
+
+        this.questions = new Question[0];
+        this.statistics = statistics;
+        this.strategy = strategy;
+    }
+
+    
+    
     @Override
     public boolean addQuestion(IQuestion iq) throws TestException{
         if (iq == null) throw new TestException("The question cannot be Null type.");
@@ -42,7 +67,7 @@ public class Test implements ITest{
             
         }
         if (this.numberQuestions() == this.questions.length){
-            IQuestion[] questions = new IQuestion[this.questions.length +1];            
+            IQuestion[] questions = new Question[this.questions.length +1];            
             
             for(int i = 0; i < this.questions.length;i++){
                 questions[i] = this.questions[i];   
@@ -93,7 +118,6 @@ public class Test implements ITest{
                 removeQuestion(i);
                 return true;
             }
-            return false;
         }
         return false;  
     }
@@ -112,12 +136,13 @@ public class Test implements ITest{
     @Override
     public boolean isComplete(){
         int i = 0;
-        while(i<this.questions.length && this.questions[i].isDone()){
+        while(i<this.questions.length){
+            if(!this.questions[i].isDone()){
+                return false;
+            }
             i++;
-        }
-        return false;
-        
-       
+            }
+        return true;    
     }
  
     @Override
@@ -166,10 +191,12 @@ public class Test implements ITest{
             }   
             loadFile = true;
         }catch (FileNotFoundException ex){
+            System.out.println(ex.getMessage());
         }finally{
             try{
                 reader.close();
             }catch (IOException ex){
+                System.out.println(ex.getMessage());
             }
         }  
         return loadFile;
@@ -197,10 +224,18 @@ public class Test implements ITest{
 
     @Override
     public boolean saveTestResults() throws TestException {
-        if(this.questions == null) throw new TestException ("Test is null");
+        if(this.questions==null) throw new TestException (" This Test is null");
+        Gson gson = new Gson();
         
- 
-         return true;
-    }  
+        try(FileWriter writer = new FileWriter("C:\\Users\\Asus\\Desktop\\TesteResultados.json")){
+            gson.toJson(questions, writer);
+        }catch(IOException e){
+        System.out.println(e.getMessage());
+        }
+       return true; 
+    }
 }
+
+
+            
     
