@@ -25,7 +25,6 @@ public abstract class Question implements IQuestion{
     protected String user_answer,score;
     protected float mark;
     protected boolean done;
-    protected double user_Answer;
 
     public Question(String title, String question_description, String correct_answer, float mark) {
         this.title = title;
@@ -43,10 +42,7 @@ public abstract class Question implements IQuestion{
         this.question_Metadata = new QuestionMetadata();
         
     }
-    
-    
-    
-    
+
     
     @Override
     public String getTitle(){
@@ -82,6 +78,7 @@ public abstract class Question implements IQuestion{
     @Override
     public void answer(String string){
         this.user_answer= string;
+        this.done=true;
     }
     
     @Override
@@ -132,15 +129,5 @@ public abstract class Question implements IQuestion{
 
     public void setScore(String score) {
         this.score = score;
-    }
-    
-    public double getUserAnwser(){
-        return user_Answer;    
-    }
-    
-    public void setUserAnwser(){
-       this.user_Answer = user_Answer;
-    }
-    
-
-    
+    }    
+}
