@@ -28,13 +28,13 @@ public class ScoreStrategy implements IScoreStrategy{
             pontos += iqs[i].getMark();
             i++;
         }
-        if(pontos == 0 && pontos < 5 ){
+        if( pontos < 5 ){
             nota = ("Não Satisfaz");  
         } 
-        else if (pontos >= 5 && pontos < 10){
+        else if (pontos < 10){
             nota = ("Satisfaz");   
         }
-        else if(pontos >= 10 && pontos < 15){
+        else if(pontos < 15){
             nota = ("Satisfaz Bastante");
         }
         else{ nota = ("Excelente");
